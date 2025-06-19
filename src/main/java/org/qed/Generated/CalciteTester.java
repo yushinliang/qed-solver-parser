@@ -88,6 +88,7 @@ public class CalciteTester {
             org.qed.Generated.Tests.ProjectFilterTransposeTest.runTest();
             org.qed.Generated.Tests.JoinPushTransitivePredicatesTest.runTest();
             org.qed.Generated.Tests.SemiJoinRuleProjectTest.runTest();
+            org.qed.Generated.Tests.SemiJoinRuleUniqueTest.runTest();
             org.qed.Generated.Tests.SemiJoinProjectTransposeTest.runTest();
         } catch (Exception e) {
             System.out.println("Test failed: " + e.getMessage());
