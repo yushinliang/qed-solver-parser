@@ -23,15 +23,16 @@ public class SemiJoinRuleProjectTest {
         builder.addTable(leftTable);
         builder.addTable(rightTable);
         
+        builder.scan(rightTable.getName()).aggregate(builder.groupKey(0));
+        var rightAgg = builder.build();
         var leftScan = builder.scan(leftTable.getName()).build();
-        var rightScan = builder.scan(rightTable.getName()).build();
 
-        builder.push(leftScan).push(rightScan);
+        builder.push(leftScan).push(rightAgg);
         var joinCond = builder.equals(builder.field(2, 0, 0), builder.field(2, 1, 0));
         var before = builder.join(JoinRelType.INNER, joinCond).project(builder.field(0)).build();
 
         var after = builder.push(leftScan)
-                        .push(rightScan)
+                        .push(rightAgg)
                         .join(JoinRelType.SEMI, joinCond)
                         .project(builder.field(0))
                         .build();
