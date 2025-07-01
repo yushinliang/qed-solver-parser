@@ -16,6 +16,8 @@ import org.apache.calcite.tools.Frameworks;
 import org.apache.calcite.tools.RelBuilder;
 import org.apache.calcite.util.Optionality;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.qed.RuleBuilder.QedAggregateFunction;
+import org.qed.RuleBuilder.QedFunction;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;

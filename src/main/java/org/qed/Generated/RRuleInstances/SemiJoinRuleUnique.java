@@ -12,7 +12,7 @@ import org.qed.RuleBuilder;
 
 public record SemiJoinRuleUnique() implements RRule {
     static final RelRN left = RelRN.scan("Left", "Left_Type");
-    static final RelType.VarType rightType = new RelType.VarType("INTEGER", true);
+    static final RelType.VarType rightType = new RelType.VarType("INTEGER", false);
     static final RelRN right = RelRN.scan("Right", rightType, true);       // unique on join key
     static final RexRN joinCond = left.joinPred("join", right);
     static final RexRN allCols = left.proj("identity", "Left_Type");
