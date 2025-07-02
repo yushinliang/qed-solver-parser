@@ -19,7 +19,7 @@ public class SemiJoinRuleProjectTest {
         var rule = new SemiJoinRuleProject();
         
         var leftTable = builder.createQedTable(Seq.of(Tuple.of(RelType.fromString("INTEGER", true), false)));
-        var rightTable = builder.createQedTable(Seq.of(Tuple.of(RelType.fromString("INTEGER", true), false)));
+        var rightTable = builder.createQedTable(Seq.of(Tuple.of(RelType.fromString("INTEGER", false), true)));
         builder.addTable(leftTable);
         builder.addTable(rightTable);
         

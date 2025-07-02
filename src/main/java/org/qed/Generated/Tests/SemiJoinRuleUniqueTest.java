@@ -19,7 +19,7 @@ public class SemiJoinRuleUniqueTest {
         var rule = new SemiJoinRuleUnique();
         
         var leftTable = builder.createQedTable(Seq.of(Tuple.of(RelType.fromString("INTEGER", true), false)));
-        var rightTable = builder.createQedTable(Seq.of(Tuple.of(RelType.fromString("INTEGER", false), true)));
+        var rightTable = builder.createQedTable(Seq.of(Tuple.of(RelType.fromString("INTEGER", false),true)));
         builder.addTable(leftTable);
         builder.addTable(rightTable);
         
