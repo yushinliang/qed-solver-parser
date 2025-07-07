@@ -24,8 +24,11 @@ public class CalciteGenerator implements CodeGenerator<CalciteGenerator.Env> {
 
     @Override
     public Env preTransform(Env env) {
+        // var buildEnv = env.declare("call.builder()");
+        // return buildEnv.getValue().focus(buildEnv.getKey());
         var buildEnv = env.declare("call.builder()");
-        return buildEnv.getValue().focus(buildEnv.getKey());
+        var builder = buildEnv.getKey();
+        return buildEnv.getValue().symbol("builder",builder).focus(builder);
     }
 
     @Override
@@ -367,10 +370,8 @@ public class CalciteGenerator implements CodeGenerator<CalciteGenerator.Env> {
         var source_expression = right_source_transform.current();
 
         // var cond_transform = transform(right_source_transform, join.cond());
-        String builder = "var_4";
         String cond_expression;
         var transform = right_source_transform;
-
         if (join.cond() instanceof RexRN.Pred p
             && p.operator() == SqlStdOperatorTable.EQUALS
             && p.sources().size() == 2
@@ -379,7 +380,7 @@ public class CalciteGenerator implements CodeGenerator<CalciteGenerator.Env> {
             // equi join
             int leftIndex  = lf.ordinal();
             int rightIndex = rf.ordinal();
-
+            String builder = transform.symbols().get("builder");
             cond_expression =
                 builder + ".equals("
                 + builder + ".field(2, 0, " + leftIndex  + "), "
