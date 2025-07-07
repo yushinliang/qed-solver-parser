@@ -4,6 +4,8 @@ import kala.collection.Seq;
 import kala.collection.immutable.ImmutableMap;
 import kala.tuple.Tuple;
 import kala.tuple.Tuple2;
+
+import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 import org.qed.CodeGenerator;
 import org.qed.RelRN;
 import org.qed.RexRN;
@@ -363,7 +365,31 @@ public class CalciteGenerator implements CodeGenerator<CalciteGenerator.Env> {
         var left_source_transform = transform(env, join.left());
         var right_source_transform = transform(left_source_transform, join.right());
         var source_expression = right_source_transform.current();
-        var cond_transform = transform(right_source_transform, join.cond());
+
+        // var cond_transform = transform(right_source_transform, join.cond());
+        String builder = "var_4";
+        String cond_expression;
+        var transform = right_source_transform;
+
+        if (join.cond() instanceof RexRN.Pred p
+            && p.operator() == SqlStdOperatorTable.EQUALS
+            && p.sources().size() == 2
+            && p.sources().get(0) instanceof RexRN.Field lf
+            && p.sources().get(1) instanceof RexRN.Field rf) {
+            // equi join
+            int leftIndex  = lf.ordinal();
+            int rightIndex = rf.ordinal();
+
+            cond_expression =
+                builder + ".equals("
+                + builder + ".field(2, 0, " + leftIndex  + "), "
+                + builder + ".field(2, 1, " + rightIndex + "))";
+        } else {
+            var cond_transform = transform(right_source_transform, join.cond());
+            cond_expression = cond_transform.current();
+            transform = cond_transform;
+        }
+
         var join_type = switch (join.ty().semantics()) {
             case INNER -> "JoinRelType.INNER";
             case LEFT -> "JoinRelType.LEFT";
@@ -372,7 +398,7 @@ public class CalciteGenerator implements CodeGenerator<CalciteGenerator.Env> {
             case SEMI -> "JoinRelType.SEMI";
             case ANTI -> "JoinRelType.ANTI";
         };
-        return cond_transform.focus(source_expression + ".join(" + join_type + ", " + cond_transform.current() + ")");
+        return transform.focus(source_expression + ".join(" + join_type + ", " + cond_expression + ")");
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.qed;
 import kala.collection.Seq;
 import org.apache.calcite.rex.RexNode;
 import org.apache.calcite.sql.SqlOperator;
+import org.apache.calcite.sql.fun.SqlStdOperatorTable;
 
 public interface RexRN {
 
@@ -20,6 +21,10 @@ public interface RexRN {
 
     static True trueLiteral() {
         return new True();
+    }
+
+    static RexRN eq (RexRN left, RexRN right) {
+        return new Pred(SqlStdOperatorTable.EQUALS, Seq.of(left, right));
     }
 
     RexNode semantics();

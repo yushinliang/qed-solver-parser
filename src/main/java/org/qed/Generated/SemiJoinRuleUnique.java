@@ -14,7 +14,7 @@ public class SemiJoinRuleUnique extends RelRule<SemiJoinRuleUnique.Config> {
 	@Override
 	public void onMatch(RelOptRuleCall call) {
 		var var_4 = call.builder();
-		call.transformTo(var_4.push(call.rel(2)).push(call.rel(3)).join(JoinRelType.SEMI, ((LogicalJoin) call.rel(1)).getCondition()).project(((LogicalProject) call.rel(0)).getProjects()).build());
+		call.transformTo(var_4.push(call.rel(2)).push(call.rel(3)).join(JoinRelType.SEMI, var_4.equals(var_4.field(2, 0, 0), var_4.field(2, 1, 0))).project(((LogicalProject) call.rel(0)).getProjects()).build());
 	}
 
 	public interface Config extends EmptyConfig {
